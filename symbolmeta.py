@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
-# import pytest
 
 
 class SymbolMeta(type):
@@ -34,37 +33,3 @@ class Symbol(metaclass=SymbolMeta):
 
     def __repr__(self):
         return f"Symbol({self.name}, {self.pat})"
-
-
-# @pytest.fixture
-# def symbols():
-#     SymbolMeta._symbols.clear()
-#     name = Symbol("NAME", r"[A-Za-z_]\w*")
-#     num = Symbol("NUM", r"\d+")
-#     return name, num
-
-
-# def test_symbol_eq(symbols):
-#     name, num = symbols
-#     assert name == "NAME"
-#     assert name == Symbol("NAME")
-
-
-# def test_masterpat(symbols):
-#     assert SymbolMeta.masterpat() == "(?P<NAME>[A-Za-z_]\\w*)|(?P<NUM>\\d+)"
-
-
-# def test_symbol(symbols):
-#     name, num = symbols
-#     assert str(name) == "Symbol(NAME, [A-Za-z_]\\w*)"
-#     assert str(num) == "Symbol(NUM, \\d+)"
-#     num2 = Symbol("NUM")
-#     assert num is num2
-
-
-# if __name__ == "__main__":
-#     name = Symbol("NAME", r"[A-Za-z_]\w*")
-#     num = Symbol("NUM", r"\d+")
-#     print(num)
-#     num2 = Symbol("NUM", r"\d+")
-#     assert num is num2
