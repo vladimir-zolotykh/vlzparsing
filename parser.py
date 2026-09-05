@@ -31,13 +31,11 @@ class Parser:
         self.tokens = iter_tokens(sexpr)
         self._advance()
 
-    def one_of(self, *expected_symbols: tuple[Symbol, ...]) -> Token | None:
-        print(f"{expected_symbols = }")
+    def one_of(self, *expected_symbols: tuple[Symbol, ...]) -> Symbol | None:
         if not (tok := self.tok):
             return None
-        print(f"{tok = }")
-        if tok in expected_symbols:
-            return tok
+        if (sym := tok.sym) in expected_symbols:
+            return sym
         else:
             return None
 
