@@ -8,7 +8,8 @@ from symbolmeta import Symbol, SymbolMeta
 
 class Token:
     def __init__(self, sym: Symbol, val: object):
-        pass
+        self.sym = sym
+        self.val = val
 
     def __eq__(self, other) -> bool:
         if isinstance(other, type(self)):

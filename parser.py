@@ -51,7 +51,7 @@ class Parser:
             res = self.expr()
             self._expect(Symbol("RPAREN"))
         else:
-            res = Num(float(self.tok))
+            res = Num(float(self.tok.val))
         self._consume()
         return res
 
@@ -75,7 +75,7 @@ class Parser:
 
 
 if __name__ == "__main__":
-    p = Parser()
     sexpr = "2 + (3 * 4) + 5"
-    n: Node = p.parse(sexpr)
+    p = Parser(sexpr)
+    n: Node = p.parse()
     print(n)
