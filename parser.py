@@ -16,6 +16,16 @@ Symbol("MUL", r"\*")
 Symbol("DIV", r"/")
 
 
+def make_binop(sym: Symbol, left: Node, right: Node) -> Node:
+    cls = {
+        Symbol("PLUS"): Plus,
+        Symbol("MINUS"): Minus,
+        Symbol("Mul"): Mul,
+        Symbol("Div"): Div,
+    }[sym]
+    return cls(left, right)
+
+
 class Parser:
     def __init__(self, sexpr: str):
         self.tokens = iter_tokens(sexpr)
@@ -25,16 +35,14 @@ class Parser:
         res = self.term()
         while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
             self._consume()
-            right = self.term()
-            res = Plus(res, right) if tok.sym == Symbol("Plus") else Minus(res, right)
+            res = make_binop(tok.sym, res, self.term())
         return res
 
     def term(self) -> Node:
         res = self.factor()
         while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
             self._consume()
-            right = self.factor()
-            res = Mul(res, right) if tok.sym == Symbol("Mul") else Div(res, right)
+            res = make_binop(tok.sym, res, self.factor())
         return res
 
     def factor(self) -> Node:
