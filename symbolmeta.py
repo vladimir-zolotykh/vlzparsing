@@ -32,4 +32,5 @@ class Symbol(metaclass=SymbolMeta):
             return NotImplemented
 
     def __repr__(self):
-        return f"Symbol({self.name}, {self.pat})"
+        # return f"Symbol({self.name}, {self.pat})"
+        return f"{self.name}"

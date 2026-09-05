@@ -31,17 +31,31 @@ class Parser:
         self.tokens = iter_tokens(sexpr)
         self._advance()
 
+    def one_of(self, *expected_symbols: tuple[Symbol, ...]) -> Token | None:
+        print(f"{expected_symbols = }")
+        if not (tok := self.tok):
+            return None
+        print(f"{tok = }")
+        if tok in expected_symbols:
+            return tok
+        else:
+            return None
+
     def expr(self) -> Node:
         res = self.term()
-        while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
+        # while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
+        while tok := self.one_of(Symbol("Plus"), Symbol("Minus")):
             self._consume()
+            # res = make_binop(tok.sym, res, self.term())
             res = make_binop(tok.sym, res, self.term())
         return res
 
     def term(self) -> Node:
         res = self.factor()
-        while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
+        # while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
+        while tok := self.one_of(Symbol("Mul"), Symbol("Div")):
             self._consume()
+            # res = make_binop(tok.sym, res, self.factor())
             res = make_binop(tok.sym, res, self.factor())
         return res
 

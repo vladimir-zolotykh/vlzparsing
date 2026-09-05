@@ -23,5 +23,21 @@ class Token:
 
 def iter_tokens(sexpr: str) -> Iterator[Token]:
     for match in re.finditer(SymbolMeta.masterpat(), sexpr):
-        if Symbol("WS") != match:
+        if Symbol("WS") != match.lastgroup:
             yield Token(Symbol(match.lastgroup), match.group(0))
+
+
+if __name__ == "__main__":
+    Symbol("NAME", r"[A-Za-z_]\w*")
+    Symbol("NUM", r"\d+")
+    Symbol("WS", r"\s+")
+    Symbol("LPAREN", r"\(")
+    Symbol("RPAREN", r"\)")
+    Symbol("PLUS", r"\+")
+    Symbol("MINUS", r"-")
+    Symbol("MUL", r"\*")
+    Symbol("DIV", r"/")
+
+    sexpr = "2 + (3 * 4) + 5"
+    for tok in iter_tokens(sexpr):
+        print(tok)
