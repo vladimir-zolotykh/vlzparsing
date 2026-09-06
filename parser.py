@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from typing import Iterator
+import pytest
 from symbolmeta import Symbol
 from node import Node, Num, Plus, Minus, Mul, Div
 
@@ -79,7 +80,19 @@ class Parser:
         self._consume()
 
 
+@pytest.mark.parametrize(
+    "sexpr, nexpr",
+    [
+        ("2 + (3 * 4) + 5", Plus(Plus(Num(2.0), Mul(Num(3.0), Num(4.0))), Num(5.0))),
+        ("2 + (3 * 4) - 5", Minus(Plus(Num(2.0), Mul(Num(3.0), Num(4.0))), Num(5.0))),
+        ("2 + (9 / 3) - 4", Minus(Plus(Num(2.0), Div(Num(9.0), Num(3.0))), Num(4.0))),
+    ],
+)
+def test_parser(sexpr, nexpr):
+    assert Parser().parse(sexpr) == nexpr
+
+
 if __name__ == "__main__":
-    sexpr = "2 + (3 * 4) + 5"
+    sexpr = "2 + (9 / 3) - 4"
     n: Node = Parser().parse(sexpr)
     print(n)
