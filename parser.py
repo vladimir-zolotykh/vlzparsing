@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+from typing import Iterator
 from symbolmeta import Symbol
 from node import Node, Num, Plus, Minus, Mul, Div
 
@@ -29,8 +30,8 @@ def make_binop(sym: Symbol, left: Node, right: Node) -> Node:
 
 class Parser:
     def __init__(self):
-        self.tokens = None
-        self.tok = None
+        self.tokens: Iterator[Token] | None = None
+        self.tok: Token | None = None
 
     def parse(self, sexpr: str) -> Node:
         self.tokens = iter_tokens(sexpr)
