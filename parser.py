@@ -3,7 +3,8 @@
 # PYTHON_ARGCOMPLETE_OK
 from symbolmeta import Symbol
 from node import Node, Num, Plus, Minus, Mul, Div
-from token import Token, iter_tokens
+
+from itertokens import Token, iter_tokens
 
 Symbol("NAME", r"[A-Za-z_]\w*")
 Symbol("NUM", r"\d+")
@@ -64,7 +65,7 @@ class Parser:
             self._expect(Symbol("RPAREN"))
         else:
             res = Num(float(self.tok.val))
-        self._consume()
+            self._consume()
         return res
 
     def parse(self) -> Node:
@@ -81,7 +82,7 @@ class Parser:
         self.tok = next(self.tokens)
 
     def _expect(self, expected_sym: Symbol) -> None:
-        if expected_sym != self.tok:
+        if expected_sym != self.tok.sym:
             raise SyntaxError(f"{expected_sym!r} expected, got {self.tok!r}")
         self._consume()
 
