@@ -92,6 +92,18 @@ def test_parser(sexpr, nexpr):
     assert Parser().parse(sexpr) == nexpr
 
 
+@pytest.mark.parametrize(
+    "sexpr",
+    [
+        "2 + (3 * 4) + 5",
+        "2 + (3 * 4) - 5",
+        "2 + (9 / 3) - 4",
+    ],
+)
+def test_binop_float(sexpr):
+    assert float(Parser().parse(sexpr)) == eval(sexpr)
+
+
 if __name__ == "__main__":
     sexpr = "2 + (9 / 3) - 4"
     n: Node = Parser().parse(sexpr)
