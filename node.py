@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
+import operator
 
 
 class Node:
@@ -21,6 +22,9 @@ class Num(Node):
     def __repr__(self) -> str:
         return f"Num({self.val})"
 
+    def __float__(self) -> float:
+        return self.val
+
 
 class BinOp(Node):
     def __init__(self, left: Node, right: Node):
@@ -36,18 +40,21 @@ class BinOp(Node):
     def __repr__(self) -> str:
         return f"{type(self).__name__}({self.left}, {self.right})"
 
+    def __float__(self) -> float:
+        return self._op(float(self.left), float(self.right))
+
 
 class Plus(BinOp):
-    pass
+    _op = operator.add
 
 
 class Minus(BinOp):
-    pass
+    _op = operator.sub
 
 
 class Mul(BinOp):
-    pass
+    _op = operator.mul
 
 
 class Div(BinOp):
-    pass
+    _op = operator.truediv
