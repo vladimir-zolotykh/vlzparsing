@@ -21,40 +21,33 @@ def make_binop(sym: Symbol, left: Node, right: Node) -> Node:
     cls = {
         Symbol("PLUS"): Plus,
         Symbol("MINUS"): Minus,
-        Symbol("Mul"): Mul,
-        Symbol("Div"): Div,
+        Symbol("MUL"): Mul,
+        Symbol("DIV"): Div,
     }[sym]
     return cls(left, right)
 
 
 class Parser:
-    def __init__(self, sexpr: str):
+    def __init__(self):
+        self.tokens = None
+        self.tok = None
+
+    def parse(self, sexpr: str) -> Node:
         self.tokens = iter_tokens(sexpr)
         self._advance()
-
-    def one_of(self, *expected_symbols: tuple[Symbol, ...]) -> Symbol | None:
-        if not (tok := self.tok):
-            return None
-        if (sym := tok.sym) in expected_symbols:
-            return sym
-        else:
-            return None
+        return self.expr()
 
     def expr(self) -> Node:
         res = self.term()
-        # while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
-        while tok := self.one_of(Symbol("Plus"), Symbol("Minus")):
+        while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
             self._consume()
-            # res = make_binop(tok.sym, res, self.term())
             res = make_binop(tok.sym, res, self.term())
         return res
 
     def term(self) -> Node:
         res = self.factor()
-        # while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
-        while tok := self.one_of(Symbol("Mul"), Symbol("Div")):
+        while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
             self._consume()
-            # res = make_binop(tok.sym, res, self.factor())
             res = make_binop(tok.sym, res, self.factor())
         return res
 
@@ -67,9 +60,6 @@ class Parser:
             res = Num(float(self.tok.val))
             self._consume()
         return res
-
-    def parse(self) -> Node:
-        return self.expr()
 
     def _advance(self) -> Token:
         try:
@@ -89,6 +79,5 @@ class Parser:
 
 if __name__ == "__main__":
     sexpr = "2 + (3 * 4) + 5"
-    p = Parser(sexpr)
-    n: Node = p.parse()
+    n: Node = Parser().parse(sexpr)
     print(n)
