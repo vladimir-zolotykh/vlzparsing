@@ -5,15 +5,19 @@
 
 class SymbolMeta(type):
     _symbols = {}
+    _frozen: bool = False
 
     def __call__(cls, name, pat=""):
         symbols = type(cls)._symbols
         if name not in symbols:
+            if type(cls)._frozen:
+                raise TypeError(f"{cls!r}: object does not support item assignment")
             symbols[name] = super().__call__(name, pat)
         return symbols[name]
 
     @classmethod
     def masterpat(cls):
+        cls._frozen = True
         return "|".join(f"(?P<{name}>{sym.pat})" for name, sym in cls._symbols.items())
 
 
@@ -30,6 +34,9 @@ class Symbol(metaclass=SymbolMeta):
             return self.name == other
         else:
             return NotImplemented
+
+    def __hash__(self) -> int:
+        return hash(self.name)
 
     def __repr__(self):
         # return f"Symbol({self.name}, {self.pat})"

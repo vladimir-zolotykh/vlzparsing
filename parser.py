@@ -40,20 +40,20 @@ class Parser:
 
     def expr(self) -> Node:
         res = self.term()
-        while (tok := self.tok) and tok.sym in (Symbol("Plus"), Symbol("Minus")):
+        while (tok := self.tok) and tok.sym in (Symbol("PLUS"), Symbol("MINUS")):
             self._consume()
             res = make_binop(tok.sym, res, self.term())
         return res
 
     def term(self) -> Node:
         res = self.factor()
-        while (tok := self.tok) and tok.sym in (Symbol("Mul"), Symbol("Div")):
+        while (tok := self.tok) and tok.sym in (Symbol("MUL"), Symbol("DIV")):
             self._consume()
             res = make_binop(tok.sym, res, self.factor())
         return res
 
     def factor(self) -> Node:
-        if Symbol("LPAREN") == self.tok:
+        if Symbol("LPAREN") == self.tok.sym:
             self._consume()
             res = self.expr()
             self._expect(Symbol("RPAREN"))
@@ -70,9 +70,10 @@ class Parser:
         return self.tok
 
     def _consume(self) -> None:
-        self.tok = next(self.tokens)
+        self.tok = next(self.tokens, None)
 
     def _expect(self, expected_sym: Symbol) -> None:
+        assert isinstance(expected_sym, Symbol)
         if expected_sym != self.tok.sym:
             raise SyntaxError(f"{expected_sym!r} expected, got {self.tok!r}")
         self._consume()
