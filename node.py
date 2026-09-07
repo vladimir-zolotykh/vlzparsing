@@ -27,6 +27,16 @@ class Num(Node):
 
 
 class BinOp(Node):
+    _func = {
+        "Plus": operator.add,
+        "Minus": operator.sub,
+        "Mul": operator.mul,
+        "Div": operator.truediv,
+    }
+
+    def __init_subclass__(cls):
+        setattr(cls, "_op", BinOp._func[cls.__name__])
+
     def __init__(self, left: Node, right: Node):
         self.left = left
         self.right = right
@@ -45,16 +55,20 @@ class BinOp(Node):
 
 
 class Plus(BinOp):
-    _op = operator.add
+    # _op = operator.add
+    pass
 
 
 class Minus(BinOp):
-    _op = operator.sub
+    # _op = operator.sub
+    pass
 
 
 class Mul(BinOp):
-    _op = operator.mul
+    # _op = operator.mul
+    pass
 
 
 class Div(BinOp):
-    _op = operator.truediv
+    # _op = operator.truediv
+    pass
