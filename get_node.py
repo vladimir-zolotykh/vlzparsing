@@ -9,11 +9,11 @@ OpType = Callable[[float, float], float]
 
 
 @singledispatch
-def get_operator(arg) -> OpType:
-    raise NotImplementedError(f"get_operator({type(arg)}) not defined")
+def get_op(arg) -> OpType:
+    raise NotImplementedError(f"get_op({type(arg)}) not defined")
 
 
-@get_operator.register
+@get_op.register
 def _(cls: Node) -> OpType:
     return {
         Plus: operator.add,
@@ -23,10 +23,10 @@ def _(cls: Node) -> OpType:
     }[cls]
 
 
-@get_operator.register
+@get_op.register
 def _(cls_name: str) -> OpType:
-    # return get_operator(eval(cls_name, globals()))
-    return get_operator(globals()[cls_name])
+    # return get_op(eval(cls_name, globals()))
+    return get_op(globals()[cls_name])
 
 
 @singledispatch
@@ -50,8 +50,8 @@ def _(sym_name: str) -> Node:
 
 
 def test_get_node():
-    assert get_operator(Minus) == operator.sub
-    assert get_operator("Minus") == operator.sub
+    assert get_op(Minus) == operator.sub
+    assert get_op("Minus") == operator.sub
     assert get_node(Symbol("MUL")) == Mul
     assert get_node("MUL") == Mul
 
