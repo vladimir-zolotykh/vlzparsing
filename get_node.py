@@ -30,11 +30,11 @@ def _(cls_name: str) -> OpType:
 
 
 @singledispatch
-def get_node(arg) -> type:
-    raise NotImplementedError(f"get_node({arg!r}) not defined")
+def getcls(arg) -> type:
+    raise NotImplementedError(f"getcls({arg!r}) not defined")
 
 
-@get_node.register
+@getcls.register
 def _(sym: Symbol) -> type:
     return {
         Symbol("PLUS"): Plus,
@@ -44,16 +44,16 @@ def _(sym: Symbol) -> type:
     }[sym]
 
 
-@get_node.register
+@getcls.register
 def _(sym_name: str) -> type:
-    return get_node(Symbol(sym_name))
+    return getcls(Symbol(sym_name))
 
 
-def test_get_node():
+def test_getcls():
     assert get_op(Minus) == operator.sub
     assert get_op("Minus") == operator.sub
-    assert get_node(Symbol("MUL")) == Mul
-    assert get_node("MUL") == Mul
+    assert getcls(Symbol("MUL")) == Mul
+    assert getcls("MUL") == Mul
 
 
 if __name__ == "__main__":
