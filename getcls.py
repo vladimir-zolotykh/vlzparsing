@@ -19,12 +19,7 @@ def getop(arg: object) -> OpType:
 
 @getop.register
 def _(cls: BinOpType) -> OpType:
-    return {
-        Plus: operator.add,
-        Minus: operator.sub,
-        Mul: operator.mul,
-        Div: operator.truediv,
-    }[cls]
+    return cls._op
 
 
 @getop.register
