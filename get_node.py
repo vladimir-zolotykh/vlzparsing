@@ -10,11 +10,11 @@ OpType = Callable[[float, float], float]
 
 @singledispatch
 def get_op(arg) -> OpType:
-    raise NotImplementedError(f"get_op({type(arg)}) not defined")
+    raise NotImplementedError(f"get_op({arg!r}) not defined")
 
 
 @get_op.register
-def _(cls: Node) -> OpType:
+def _(cls: type) -> OpType:
     return {
         Plus: operator.add,
         Minus: operator.sub,
