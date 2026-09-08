@@ -2,7 +2,7 @@ from typing import Callable
 from functools import singledispatch
 import operator
 import pytest
-from node import Node, Plus, Minus, Mul, Div
+from node import Plus, Minus, Mul, Div
 from symbolmeta import Symbol
 
 OpType = Callable[[float, float], float]
@@ -30,7 +30,7 @@ def _(cls_name: str) -> OpType:
 
 
 @singledispatch
-def get_node(arg) -> Node:
+def get_node(arg) -> type:
     raise NotImplementedError(f"get_node({arg!r}) not defined")
 
 
@@ -45,7 +45,7 @@ def _(sym: Symbol) -> type:
 
 
 @get_node.register
-def _(sym_name: str) -> Node:
+def _(sym_name: str) -> type:
     return get_node(Symbol(sym_name))
 
 
