@@ -6,6 +6,7 @@ from node import BinOp, Plus, Minus, Mul, Div
 from symbolmeta import Symbol
 
 OpType = Callable[[float, float], float]
+BinOpType = type[BinOp]
 
 
 @singledispatch
@@ -14,7 +15,7 @@ def getop(arg: object) -> OpType:
 
 
 @getop.register
-def _(cls: type(BinOp)) -> OpType:
+def _(cls: BinOpType) -> OpType:
     return {
         Plus: operator.add,
         Minus: operator.sub,
@@ -45,7 +46,7 @@ def _(sym: Symbol) -> type[BinOp]:
 
 
 @getcls.register
-def _(sym_name: str) -> type[BinOp]:
+def _(sym_name: str) -> BinOpType:
     return getcls(Symbol(sym_name))
 
 
