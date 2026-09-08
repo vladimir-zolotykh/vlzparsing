@@ -2,19 +2,19 @@ from typing import Callable
 from functools import singledispatch
 import operator
 import pytest
-from node import Plus, Minus, Mul, Div
+from node import BinOp, Plus, Minus, Mul, Div
 from symbolmeta import Symbol
 
 OpType = Callable[[float, float], float]
 
 
 @singledispatch
-def get_op(arg) -> OpType:
+def get_op(arg: object) -> OpType:
     raise NotImplementedError(f"get_op({arg!r}) not defined")
 
 
 @get_op.register
-def _(cls: type) -> OpType:
+def _(cls: type[BinOp]) -> OpType:
     return {
         Plus: operator.add,
         Minus: operator.sub,
@@ -30,7 +30,7 @@ def _(cls_name: str) -> OpType:
 
 
 @singledispatch
-def getcls(arg) -> type:
+def getcls(arg: object) -> type:
     raise NotImplementedError(f"getcls({arg!r}) not defined")
 
 
