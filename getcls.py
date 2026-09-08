@@ -1,4 +1,4 @@
-from typing import Callable
+from typing import Callable, TYPE_CHECKING
 from functools import singledispatch
 import operator
 import pytest
@@ -6,7 +6,10 @@ from node import BinOp, Plus, Minus, Mul, Div
 from symbolmeta import Symbol
 
 OpType = Callable[[float, float], float]
-BinOpType = type[BinOp]
+if TYPE_CHECKING:
+    BinOpType = type[BinOp]
+else:
+    BinOpType = type(BinOp)
 
 
 @singledispatch
@@ -14,6 +17,7 @@ def getop(arg: object) -> OpType:
     raise NotImplementedError(f"getop({arg!r}) not defined")
 
 
+# def _(cls: BinOpType) -> OpType:
 @getop.register
 def _(cls: BinOpType) -> OpType:
     return {
