@@ -14,7 +14,7 @@ def get_op(arg: object) -> OpType:
 
 
 @get_op.register
-def _(cls: type[BinOp]) -> OpType:
+def _(cls: type(BinOp)) -> OpType:
     return {
         Plus: operator.add,
         Minus: operator.sub,
