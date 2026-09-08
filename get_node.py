@@ -31,11 +31,11 @@ def _(cls_name: str) -> OpType:
 
 @singledispatch
 def get_node(arg) -> Node:
-    raise NotImplementedError(f"get_node({type(arg)}) not defined")
+    raise NotImplementedError(f"get_node({arg!r}) not defined")
 
 
 @get_node.register
-def _(sym: Symbol) -> Node:
+def _(sym: Symbol) -> type:
     return {
         Symbol("PLUS"): Plus,
         Symbol("MINUS"): Minus,
