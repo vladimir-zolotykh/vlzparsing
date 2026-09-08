@@ -9,11 +9,11 @@ OpType = Callable[[float, float], float]
 
 
 @singledispatch
-def get_op(arg: object) -> OpType:
-    raise NotImplementedError(f"get_op({arg!r}) not defined")
+def getop(arg: object) -> OpType:
+    raise NotImplementedError(f"getop({arg!r}) not defined")
 
 
-@get_op.register
+@getop.register
 def _(cls: type(BinOp)) -> OpType:
     return {
         Plus: operator.add,
@@ -23,10 +23,10 @@ def _(cls: type(BinOp)) -> OpType:
     }[cls]
 
 
-@get_op.register
+@getop.register
 def _(cls_name: str) -> OpType:
-    # return get_op(eval(cls_name, globals()))
-    return get_op(globals()[cls_name])
+    # return getop(eval(cls_name, globals()))
+    return getop(globals()[cls_name])
 
 
 @singledispatch
@@ -50,8 +50,8 @@ def _(sym_name: str) -> type[BinOp]:
 
 
 def test_getcls():
-    assert get_op(Minus) == operator.sub
-    assert get_op("Minus") == operator.sub
+    assert getop(Minus) == operator.sub
+    assert getop("Minus") == operator.sub
     assert getcls(Symbol("MUL")) == Mul
     assert getcls("MUL") == Mul
 
