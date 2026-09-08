@@ -17,7 +17,6 @@ def getop(arg: object) -> OpType:
     raise NotImplementedError(f"getop({arg!r}) not defined")
 
 
-# def _(cls: BinOpType) -> OpType:
 @getop.register
 def _(cls: BinOpType) -> OpType:
     return {
