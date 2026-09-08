@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # PYTHON_ARGCOMPLETE_OK
 from functools import singledispatch
+from node import Plus
 
 
 @singledispatch
@@ -10,18 +11,17 @@ def getop(arg):
 
 
 @getop.register
-def _(arg: int) -> int:
+def _(arg: type) -> int:
     print(f"{arg = }")
     return arg
 
 
 @getop.register
-def _(arg: float) -> float:
+def _(arg: str) -> float:
     print(f"{arg = }")
     return arg
 
 
 if __name__ == "__main__":
-    getop(10)
-    getop(12.5)
-    getop("asdf")
+    getop(Plus)
+    getop("Plus")
