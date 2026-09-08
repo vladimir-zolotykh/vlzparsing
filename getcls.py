@@ -35,7 +35,7 @@ def getcls(arg: object) -> type:
 
 
 @getcls.register
-def _(sym: Symbol) -> type:
+def _(sym: Symbol) -> type[BinOp]:
     return {
         Symbol("PLUS"): Plus,
         Symbol("MINUS"): Minus,
@@ -45,7 +45,7 @@ def _(sym: Symbol) -> type:
 
 
 @getcls.register
-def _(sym_name: str) -> type:
+def _(sym_name: str) -> type[BinOp]:
     return getcls(Symbol(sym_name))
 
 
