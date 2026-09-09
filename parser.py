@@ -13,20 +13,10 @@ Symbol("NUM", r"\d+")
 Symbol("WS", r"\s+")
 Symbol("LPAREN", r"\(")
 Symbol("RPAREN", r"\)")
-Symbol("PLUS", r"\+")
-Symbol("MINUS", r"-")
-Symbol("MUL", r"\*")
-Symbol("DIV", r"/")
-
-
-def make_binop(sym: Symbol, left: Node, right: Node) -> Node:
-    cls = {
-        Symbol("PLUS"): Plus,
-        Symbol("MINUS"): Minus,
-        Symbol("MUL"): Mul,
-        Symbol("DIV"): Div,
-    }[sym]
-    return cls(left, right)
+Symbol("PLUS", r"\+", Plus)
+Symbol("MINUS", r"-", Minus)
+Symbol("MUL", r"\*", Mul)
+Symbol("DIV", r"/", Div)
 
 
 class Parser:
@@ -43,14 +33,14 @@ class Parser:
         res = self.term()
         while (tok := self.tok) and tok.sym in (Symbol("PLUS"), Symbol("MINUS")):
             self._consume()
-            res = make_binop(tok.sym, res, self.term())
+            res = tok.sym.nodecls(res, self.term())
         return res
 
     def term(self) -> Node:
         res = self.factor()
         while (tok := self.tok) and tok.sym in (Symbol("MUL"), Symbol("DIV")):
             self._consume()
-            res = make_binop(tok.sym, res, self.factor())
+            res = tok.sym.nodecls(res, self.factor())
         return res
 
     def factor(self) -> Node:
@@ -105,6 +95,7 @@ def test_binop_float(sexpr):
 
 
 if __name__ == "__main__":
-    sexpr = "2 + (9 / 3) - 4"
+    # sexpr = "2 + (9 / 3) - 4"
+    sexpr = "2 + (3 * 4) + 5"
     n: Node = Parser().parse(sexpr)
     print(n)
