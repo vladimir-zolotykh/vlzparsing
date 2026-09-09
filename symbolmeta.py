@@ -7,12 +7,12 @@ class SymbolMeta(type):
     _symbols = {}
     _frozen: bool = False
 
-    def __call__(cls, name, pat=""):
+    def __call__(cls, name, pat="", nodecls=None):
         symbols = type(cls)._symbols
         if name not in symbols:
             if type(cls)._frozen:
                 raise TypeError(f"{cls!r}: object does not support item assignment")
-            symbols[name] = super().__call__(name, pat)
+            symbols[name] = super().__call__(name, pat, nodecls)
         return symbols[name]
 
     @classmethod
@@ -22,10 +22,10 @@ class SymbolMeta(type):
 
 
 class Symbol(metaclass=SymbolMeta):
-    def __init__(self, name, pat=""):
-        # print(f"Initializing Symbol({name!r})")
+    def __init__(self, name, pat="", nodecls=None):
         self.name = name
         self.pat = pat
+        self.nodecls = nodecls
 
     def __eq__(self, other) -> bool:
         if isinstance(other, type(self)):
@@ -39,5 +39,4 @@ class Symbol(metaclass=SymbolMeta):
         return hash(self.name)
 
     def __repr__(self):
-        # return f"Symbol({self.name}, {self.pat})"
         return f"{self.name}"
