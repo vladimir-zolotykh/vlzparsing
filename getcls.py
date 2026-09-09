@@ -2,8 +2,10 @@ from typing import Callable, TYPE_CHECKING
 from functools import singledispatch
 import operator
 import pytest
-from node import BinOp, Plus, Minus, Mul, Div
+from node import BinOp, Minus, Mul
 from symbolmeta import Symbol
+
+Symbol("MUL", r"\*", Mul)
 
 OpType = Callable[[float, float], float]
 if TYPE_CHECKING:
@@ -24,7 +26,6 @@ def _(cls: BinOpType) -> OpType:
 
 @getop.register
 def _(cls_name: str) -> OpType:
-    # return getop(eval(cls_name, globals()))
     return getop(globals()[cls_name])
 
 
@@ -35,12 +36,9 @@ def getcls(arg: object) -> type:
 
 @getcls.register
 def _(sym: Symbol) -> type[BinOp]:
-    return {
-        Symbol("PLUS"): Plus,
-        Symbol("MINUS"): Minus,
-        Symbol("MUL"): Mul,
-        Symbol("DIV"): Div,
-    }[sym]
+    if sym.nodecls is None:
+        raise TypeError(f"{sym!r} nodecls is None")
+    return sym.nodecls
 
 
 @getcls.register
